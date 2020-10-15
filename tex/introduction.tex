@@ -1,0 +1,21 @@
+\section{INTRODUCTION}
+
+The parallel and distributed processing capacity of high-performance computing clusters continues to increase rapidly, promising to continue enabling profound scientific and industrial innovations \cite{gagliardi2019international}.    
+Hardware advances afford great opportunity, but also pose a serious challenge: developing approaches to effectively harness it.
+
+The Message Passing Interface (MPI) standard \cite{gropp1996high}, which exposes communication primitives directly to the end user, has long served as the dominant approach for building distributed computing applications.
+Although its explicit, imperative nature enables precise control over execution, it also poses significant expense in terms of programability.
+This programability cost manifests in terms of programmer productivity, programmer domain knowledge requirements, software quality, and performance tuning stymied by program brittleness \cite{gu2019comparative, tang2014mpi}.
+In response to such concerns, task-based frameworks such as Charm++ \cite{kale1993charm++}, Legion \cite{bauer2012legion}, Cilk \cite{blumofe1996cilk}, and Threading Building Blocks (TBB) \cite{reinders2007intel} have arisen.
+Under the task-based paradigm, the programmer describes the dependency relationships among computational tasks and associated data but relies on the framework runtime to automatically schedule and manage execution.
+In a parallel vein, programming languages and extensions like Unified Parallel C (UPC) \cite{el2006upc} and Chapel \cite{chamberlain2007parallel} rely on on programmers to direct execution, but equips them with powerful abstractions, such as global shared memory.
+
+In addition to programmability challenges, as HPC systems scale, deterministic algorithms depending on global synchronization become increasingly costly \cite{gropp2013programming,dongarra2014applied}.
+Best-effort computing, where data dependencies are relaxed to reduce synchronization \cite{chakradhar2010best}, can improve scalability \cite{meng2009best}.
+Algorithms performing a search or optimization with many acceptable results or employing pseudo-stochastic methods can, in cases, tolerate best-effort computing.
+However, existing distributed computing frameworks do not explicitly expose a convenient best-effort interface.
+
+The Conduit C++ Library aims to compliment the parallel and distributed programming ecosystem by exposing an explicitly best-effort, unsynchronized interface.
+Under this interface, message dispatch or delivery may be preempted in favor of more recent messages, messages may be dropped under backlog conditions, and read operations may opt to view the most recently received message in lieu of blocking for receipt of an expected message.
+(The library also provides an interoperable deterministic interface).
+Conduit's implementation explicitly targets performant inter-thread and inter-process communication, utilizing lock-free operations for the former and providing automatic message pooling and aggregation for the latter.
